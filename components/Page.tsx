@@ -101,6 +101,11 @@ const Page: React.FunctionComponent = ({ children }) => {
           color: #333;
         }
         @media(max-width: 700px) {
+          .navigation {
+            width: 100%;
+            box-sizing: border-box;
+            justify-content: center;
+          }
           .navigation-right {
             display: none;
           }

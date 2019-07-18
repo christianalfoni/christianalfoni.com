@@ -12,20 +12,22 @@ const Card: React.FunctionComponent<{
 }> = ({ url, title, heroUrl, description }) => {
   return (
       <Link href={url}>
-        <div className="card" >
+        <a className="card" target={url.startsWith('http') ? '_blank' : null}>
           <style jsx>{`
           .card {
             margin: 1rem;
             width: 300px;
             position: relative;
             cursor: pointer;
+            color: #333;
+            text-decoration: none;
           }
           .hero {
             height: 100px;
             border-radius: 3px;
             background-size: cover;
           }
-          .card a {
+          .card h2 {
             font-size: 18px;
             font-weight: 700;
             margin: 0.5rem 0;
@@ -43,12 +45,12 @@ const Card: React.FunctionComponent<{
           backgroundImage: `url("${heroUrl}")`
         }}/>
 
-        <a>{title}</a>
+        <h2>{title}</h2>
 
         <div className="description">
           {description}
         </div>
-      </div>
+      </a>
     </Link>
   )
 }
@@ -148,7 +150,7 @@ const Index: NextPage<{
             heroUrl="/static/logo.jpg"
             title={lastKofi.title}
             description="Ko-fi is a weekly video where I talk about what I have been up to. The content ranges from freelancing, to new tools and ranting about stuff."
-            url={`/articles/${lastArticle.name}`}
+            url={`https://www.youtube.com/watch?v=${lastKofi.youtubeId}`}
           />
         </div>
         <div className="cards-row">

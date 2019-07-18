@@ -1,7 +1,7 @@
 import { Feed} from 'feed'
 import { NextApiResponse } from "next";
 import publisher from '../../publisher.json'
-import { createDate } from '../../utils';
+import { createDate, sortByPublished } from '../../utils';
 import { Article } from '../../types';
 
 const feed = new Feed({
@@ -20,16 +20,30 @@ const feed = new Feed({
 
 feed.addCategory('development');
 
-Object.keys(publisher.articles).forEach((articleName) => {
+const articles = Object.keys(publisher.articles).map((articleName) => {
   const article: Article = publisher.articles[articleName]
 
-  feed.addItem({
-    title: article.title,
-    link: 'https://www.christianalfoni.com/articles/' + articleName,
-    description: article.tldr,
-    date: createDate(article.published)
-  });
+  return {
+    data: article,
+    link: 'https://www.christianalfoni.com/articles/' + articleName
+  }
 });
+
+const videos = Object.keys(publisher.videos)
+  .reduce((aggr, type) => aggr.concat(publisher.videos[type]), [])
+  .map((video) => ({
+    data: video,
+    link: `https://www.youtube.com/watch?v=${video.youtubeId}`
+  }))
+
+articles.concat(videos).sort((a, b) => sortByPublished(a.data, b.data)).forEach((entity) => {
+  feed.addItem({
+    title: entity.data.title,
+    link: entity.link,
+    description: entity.data.tldr || "",
+    date: createDate(entity.data.published)
+  });
+})
 
 const feedString = feed.rss2();
 

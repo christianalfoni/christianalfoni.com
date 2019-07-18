@@ -68,6 +68,8 @@ const Videos: NextPage<{
             align-items: center;
             font-size: 14px;
             border-radius: 3px;
+            color: #333;
+            text-decoration: none;
           }
           .item:hover {
             background-color: #F0F0F0;
@@ -99,7 +101,7 @@ const Videos: NextPage<{
             .item-details {
               width: 100%;
             }
-            .item > div:first-child {
+            .item > a > div:first-child {
               display: none;
             }
           }
@@ -111,20 +113,22 @@ const Videos: NextPage<{
         </div>
         <ul className="list">
           {videosList.map((video) => (
-            <li className="item" key={video.youtubeId}>
-              <div><img src={`https://img.youtube.com/vi/${video.youtubeId}/default.jpg`} /></div>
-              <div className="item-details">
-                <h3>{video.title}</h3>
-                <div>{video.description}</div>
-                <div className="item-meta">
-                  <div>
-                    <strong>duration:</strong> {video.duration}
-                  </div>
-                  <div>
-                    <strong>published:</strong> {createReadableDate(video.published)}
+            <li key={video.youtubeId}>
+              <a className="item" href={`https://www.youtube.com/watch?v=${video.youtubeId}`} target="_blank">
+                <div><img src={`https://img.youtube.com/vi/${video.youtubeId}/default.jpg`} /></div>
+                <div className="item-details">
+                  <h3>{video.title}</h3>
+                  <div>{video.description}</div>
+                  <div className="item-meta">
+                    <div>
+                      <strong>duration:</strong> {video.duration}
+                    </div>
+                    <div>
+                      <strong>published:</strong> {createReadableDate(video.published)}
+                    </div>
                   </div>
                 </div>
-              </div>
+              </a> 
             </li>
           ))}
         </ul>

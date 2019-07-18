@@ -68,6 +68,7 @@ const Article: NextPage<{
             padding: 0.25rem 0.5rem;
             border-radius: 2px;
             font-family: Consolas,Menlo,Monaco,source-code-pro,Courier New,monospace;
+            word-break: break-all;
           }
           .article pre {
             background-color: rgb(30,30,40);
@@ -109,8 +110,8 @@ const Article: NextPage<{
             border-radius: 3px;
           }
           .article .notice p {
-          font-size: 16px; 
-          line-height: 1.4;
+            font-size: 16px; 
+            line-height: 1.4;
           }
         `}</style>
         <style jsx>{`
@@ -212,7 +213,7 @@ const Article: NextPage<{
               margin-top: 0;
             }
             .article h1 {
-              font-size: 18px;
+              font-size: 32px;
               width: auto;
             }
           }
