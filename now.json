@@ -1,5 +1,4 @@
 {
   "version": 2,
-  "builds": [{ "src": "package.json", "use": "@now/next" }],
-  "alias": "christianalfoni.now.sh"
+  "builds": [{ "src": "package.json", "use": "@now/next" }]
 }

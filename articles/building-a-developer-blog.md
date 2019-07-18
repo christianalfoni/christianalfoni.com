@@ -213,13 +213,12 @@ The great thing about **Next** is that it can be integrated with Github using th
 }
 ```
 
-- Create a `now.json` file with an alias.
+- Create a `now.json` file.
 
 ```js
 {
   "version": 2,
-  "builds": [{ "src": "package.json", "use": "@now/next" }],
-  "alias": "{yourblogname}.now.sh"
+  "builds": [{ "src": "package.json", "use": "@now/next" }]
 }
 ```
 - Push to the `master` branch
