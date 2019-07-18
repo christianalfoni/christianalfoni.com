@@ -2,9 +2,21 @@ import Link from 'next/link';
 import Head from "next/head";
 import { useRouter } from 'next/router';
 import { FaRss, FaGithub, FaTwitter } from 'react-icons/fa';
+import { useEffect } from 'react';
 
 const Page: React.FunctionComponent = ({ children }) => {
   const router = useRouter()
+
+  if (process.env.NODE_ENV === 'production') {
+    useEffect(() => {
+      router.events.on('routeChangeComplete',  url => {
+        // @ts-ignore
+        window.gtag('config', 'UA-53419566-1', {
+          page_location: url
+        });
+      });
+    }, [])
+  }
 
   return (
     <div className="page">
