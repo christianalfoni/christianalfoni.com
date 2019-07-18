@@ -200,7 +200,32 @@ Now you can create links taking the user to `/api/rss` where you will get an RSS
 
 ## Automatic deploy
 
-The great thing about **Next** is that it is already integrated with Github. That means you deploy a new version of your site on any push to the repo. 
+The great thing about **Next** is that it can be integrated with Github using the [Now Github Integration](https://zeit.co/github). That means you deploy a new version of your site when pushing to the repo. Follow these steps:
+
+- Create an account on [zeit.co](https://zeit.co)
+- Create a Github repo
+- Install the [Now Github Integration](https://zeit.co/github)
+- Configure your `next.config.js` file with **serverless**
+
+```js
+{
+  target: 'serverless',
+}
+```
+
+- Create a `now.json` file with an alias.
+
+```js
+{
+  "version": 2,
+  "builds": [{ "src": "package.json", "use": "@now/next" }],
+  "alias": "{yourblogname}.now.sh"
+}
+```
+- Push to the `master` branch
+- Go to your [dashboard on zeit.co](https://zeit.co/dashboard)
+- Click the latest release and go to the **domains** tab at the top to add a new production domain
+- Push a new version of your blog to `master`
 
 ## Designing A Blog
 
@@ -212,3 +237,6 @@ Now, I am no designer. To get anything to look pretty okay I need to look at exi
 - **General spacing** with margins and paddings needs to be consistent. Use [rems]() to ensure this. I only use **0.5**rem, **1**rem, **1.5**rem etc. 
 - **Keep articles interesting** by not having too big paragraphs. Make sure you split up in multiple paragraphs, separate with new headers and code examples. 
 
+## Summary
+
+I hope this gave you some insight into how **Next** works and how you can quickly and easily get a custom built developer blog up and running. If you have any questions please do not hesitate to contact me or look into the source code of this blog, it is [open source on Github](https://github.com/christianalfoni/christianalfoni.com). Thanks for reading!

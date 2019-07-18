@@ -62,10 +62,10 @@ const Article: NextPage<{
             color: #ED2939;
             text-decoration: none;
           }
-          .article p code {
+          .article p code, .article li code {
             background-color: #EAEAEA;
-            font-size: 16px;
-            padding: 0.25rem;
+            font-size: inherit;
+            padding: 0.25rem 0.5rem;
             border-radius: 2px;
             font-family: Consolas,Menlo,Monaco,source-code-pro,Courier New,monospace;
           }
