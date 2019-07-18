@@ -1,0 +1,111 @@
+{
+  "articles": {
+    "building-a-developer-blog": {
+      "title": "Building a developer blog with Next JS",
+      "tldr": "I have been waiting for an opportunity to combine looking into new technology and building a new blog. Next JS version 9 was this opportunity. Let me tell you about it!",
+      "published": "10.02.2019",
+      "tags": ["typescript", "next", "marksy"],
+      "heroUrl": "https://www.elegantthemes.com/blog/wp-content/uploads/2019/04/000-Comment-Your-Code.png"
+    }
+  },
+  "videos": {
+    "ko-fi": [{
+      "title": "Ko-Fi update 16: 100% freelance, Overmind release and Codesandbox",
+      "youtubeId": "ddOGP4XWKYM",
+      "published": "05.07.2019",
+      "duration": "15:16"
+    }, {
+      "title": "Ko-Fi Update 15: State management for the win",
+      "youtubeId": "ASBZ5J4_6YI",
+      "published": "07.06.2019",
+      "duration": "17:21"
+    }, {
+      "title": "Ko-Fi Update 14: Overmind presentation, fixing styling and a menu trick",
+      "youtubeId": "pWRqvkAX4-o",
+      "published": "06.05.2019",
+      "duration": "23:50"
+    }, {
+      "title": "Ko-Fi Update 13: Building a flutter app, observable state and vision of Overmind",
+      "youtubeId": "rjTzVwRaCe8",
+      "published": "25.04.2019",
+      "duration": "20:34"
+    }, {
+      "title": "Ko-Fi Update 12: Google flutter and state management",
+      "youtubeId": "A7gK-VT5YsA",
+      "published": "05.04.2019",
+      "duration": "27:40"
+    }, {
+      "title": "Ko-Fi Update 11: Cost of open source, sleeping and new website",
+      "youtubeId": "wniXb2Dide4",
+      "published": "01.04.2019",
+      "duration": "13:51"
+    }, {
+      "title": "Ko-Fi Update 10: Preview Overmind devtools, ranting about scrolling and gaming",
+      "youtubeId": "lqkANPNkUTc",
+      "published": "22.03.2019",
+      "duration": "15:43"
+    }, {
+      "title": "Ko-Fi Update 9: Getting drunk, svgs and taxes",
+      "youtubeId": "UzfUoZuIP_0",
+      "published": "15.03.2019",
+      "duration": "11:25"
+    }, {
+      "title": "Ko-Fi Update 8: I hate twitter, youtube recommendations and nextjs",
+      "youtubeId": "jktzgBOfYzY",
+      "published": "04.03.2019",
+      "duration": "11:13"
+    }, {
+      "title": "KO-FI UPDATE 7: Overmind, state machines and choosing customers",
+      "youtubeId": "WJK7_Gq6MbQ",
+      "published": "22.02.2019",
+      "duration": "11:37"
+    }, {
+      "title": "Ko-Fi Update 6: React optimizations and Overmind release",
+      "youtubeId": "sbRbHmeTiv4",
+      "published": "15.02.2019",
+      "duration": "10:15"
+    }, {
+      "title": "Ko-Fi Update 5: Exploratory APIs, Angular and Overmind",
+      "youtubeId": "nUhEyIL9EWw",
+      "published": "11.02.2019",
+      "duration": "11:23"
+    }, {
+      "title": "Ko-fi update 3: Overmind announced and Codesandbox",
+      "youtubeId": "3Y5ywOfvEiY",
+      "published": "01.02.2019",
+      "duration": "10:15"
+    }, {
+      "title": "Ko-fi update 2: excited for announcement",
+      "youtubeId": "aootSuZedBQ",
+      "published": "28.01.2019",
+      "duration": "05:03"
+    }, {
+      "title": "Ko-Fi update 1 - Committing to updates",
+      "youtubeId": "8z2YU2h8t8E",
+      "published": "18.01.2019",
+      "duration": "07:11"
+    }],
+    "presentations": [{
+      "title": "Oslo JS meetup 2019: UI as an implementation detail",
+      "youtubeId": "ddOGP4XWKYM...",
+      "published": "05.07.2019",
+      "duration": "15:16"
+    }, {
+      "title": "React Finland 2018: Declarative state and side effects",
+      "youtubeId": "uni-dG6-Rq8",
+      "published": "27.05.2018",
+      "duration": "32:27"
+    }, {
+      "title": "ReactiveConf 2015: State, UI and the stuff in between",
+      "youtubeId": "MnFV6wEqKFE",
+      "published": "18.11.2015",
+      "duration": "25:45"
+    }],
+    "other": [{
+      "title": "A rant about CSS vs STYLES in components",
+      "youtubeId": "H461yiVwkNI",
+      "published": "01.02.2019",
+      "duration": "22:49"
+    }]
+  }
+}

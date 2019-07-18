@@ -1,0 +1,33 @@
+{
+  "name": "next-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "next start -p $PORT",
+    "dev": "next",
+    "build": "next build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "feed": "^4.0.0",
+    "framer-motion": "^1.2.1",
+    "next": "^9.0.0",
+    "prismjs": "^1.16.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-icons": "^3.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^12.6.2",
+    "@types/react": "^16.8.23",
+    "babel-plugin-prismjs": "^1.0.2",
+    "file-loader": "^4.0.0",
+    "marksy": "^8.0.0",
+    "raw-loader": "^3.0.0",
+    "typescript": "^3.5.3"
+  }
+}
