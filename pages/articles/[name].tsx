@@ -252,7 +252,7 @@ const Article: NextPage<{
         </div>
       </article>
       <Disqus.DiscussionEmbed shortname="christianalfoni" config={{
-        url: router.pathname,
+        url: `https://christianalfoni.com${router.pathname}`,
         identifier: name,
         title: publishingDetails.title
       }} />

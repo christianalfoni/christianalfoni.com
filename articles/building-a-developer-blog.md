@@ -1,6 +1,6 @@
 [Next JS version 9]() was just released. With me going 100% freelance it opened up a great opportunity to do another iteration on my blog. My previous iteration was really about server side rendering, deploying on [Heroku]() and creating a markdown converter called [marksy](), which also powers this site. 
 
-With version 9 of Next JS I got the stuff I want. Things like dynamic routing, Typescript support and other general improvements. I was super excited to see how little work it required to get my blog up and running.
+With version 9 of **Next JS** I got the stuff I want. Things like **dynamic routing**, **Typescript support**, **API routes** and other general improvements. I was super excited to see how little work it required to get my blog up and running.
 
 And so my journey began:
 
@@ -50,7 +50,7 @@ Article.getInitialProps = async ({ query }) => {
 export default Article;
 ```
 
-Now running the **Next** development flow and hitting `http://localhost:3000/articles/some-article` grabs and shows the converted markdown located in `articles/some-article.md`. Great! My proof of concept was done and I could continue building up my blog.
+Now running the **Next JS** development flow and hitting `http://localhost:3000/articles/some-article` grabs and shows the converted markdown located in `articles/some-article.md`. Great! My proof of concept was done and I could continue building up my blog.
 
 ```marksy
 h(Notice, null, "By default Next does not handle **.md** files. With a [quick webpack configuration](https://stackoverflow.com/questions/47954367/import-markdown-files-as-strings-in-next-js) you get it up and running though.")
@@ -90,7 +90,7 @@ Now I am able to write markdown code examples with whatever language I have acti
 ```
 
 ```marksy
-h(Notice, null, "**Next** has its own css-in-js solution and if you are using that make sure you use the global style approach documented [here](https://nextjs.org/blog/styling-next-with-styled-jsx#adding-global-styles).")
+h(Notice, null, "**Next JS** has its own css-in-js solution and if you are using that make sure you use the global style approach documented [here](https://nextjs.org/blog/styling-next-with-styled-jsx#adding-global-styles).")
 ```
 
 ## Publishing Management
@@ -200,7 +200,7 @@ Now you can create links taking the user to `/api/rss` where you will get an RSS
 
 ## Automatic deploy
 
-The great thing about **Next** is that it can be integrated with Github using the [Now Github Integration](https://zeit.co/github). That means you deploy a new version of your site when pushing to the repo. Follow these steps:
+The great thing about **Next JS** is that it can be integrated with Github using the [Now Github Integration](https://zeit.co/github). That means you deploy a new version of your site when pushing to the repo. Follow these steps:
 
 - Create an account on [zeit.co](https://zeit.co)
 - Create a Github repo
@@ -226,6 +226,10 @@ The great thing about **Next** is that it can be integrated with Github using th
 - Click the latest release and go to the **domains** tab at the top to add a new production domain
 - Push a new version of your blog to `master`
 
+```marksy
+h(Notice, null, "By going to the **commits** tab on your Github repo you will see the **Now** deployments indicated with a success or error. Click it to get more information.")
+```
+
 ## Designing A Blog
 
 Now, I am no designer. To get anything to look pretty okay I need to look at existing solutions and just steal as much as I can. What I have learned though is that small things like paddings and margins is the key to get a good feel for a site. I checked out [this talk](https://www.youtube.com/watch?v=F4G2i4eS7x0&t=554s) on how developers can get some insight into creating an okay design. As you can see I am stealing shamelessly from the examples there. Here is a short summary of what I did:
@@ -238,4 +242,4 @@ Now, I am no designer. To get anything to look pretty okay I need to look at exi
 
 ## Summary
 
-I hope this gave you some insight into how **Next** works and how you can quickly and easily get a custom built developer blog up and running. If you have any questions please do not hesitate to contact me or look into the source code of this blog, it is [open source on Github](https://github.com/christianalfoni/christianalfoni.com). Thanks for reading!
+I hope this gave you some insight into how **Next JS** works and how you can quickly and easily get a custom built developer blog up and running. If you have any questions please do not hesitate to contact me or look into the source code of this blog, it is [open source on Github](https://github.com/christianalfoni/christianalfoni.com). Thanks for reading!
