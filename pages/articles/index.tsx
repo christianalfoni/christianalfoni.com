@@ -86,7 +86,6 @@ const Articles: NextPage<{
         @media(max-width: 700px) {
           .item {
             flex-direction: column;
-            padding: 0;
           }
           .item-details {
               width: 100%;

@@ -155,13 +155,13 @@ const Index: NextPage<{
         </div>
         <div className="cards-row">
           <Card
-            heroUrl="https://cerebraljs.com/images/debugger.png"
+            heroUrl="/static/cerebral.png"
             title="Cerebral JS"
             description="A state management tool for projects using plain Javascript and needs to handle application level complexity."
             url="https://cerebraljs.com"
           />
           <Card
-            heroUrl="https://www.overmindjs.org/images/amazing_devtools.png"
+            heroUrl="/static/overmind.png"
             title="Overmind JS"
             description="A state management tool for projects using Typescript and needs to handle application level complexity."
             url="https://overmindjs.org"

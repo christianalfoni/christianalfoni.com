@@ -94,14 +94,16 @@ const Videos: NextPage<{
             margin-right: 1rem;
           }
           @media(max-width: 700px) {
-            .item {
-              flex-direction: column;
-              padding: 0;
+            .item img {
+              width: 50px;
             }
             .item-details {
               width: 100%;
             }
-            .item > a > div:first-child {
+            .item-details h3 {
+              font-size: 14px;
+            }
+            .item-meta {
               display: none;
             }
           }
