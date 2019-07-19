@@ -1,8 +1,10 @@
 import { NextPage } from 'next';
 import marksy from 'marksy'
 import { createElement } from 'react';
+import Disqus from 'disqus-react'
 import Prism from 'prismjs'
 import Page from '../../components/Page';
+import { useRouter } from 'next/router'
 import publisher from '../../publisher.json'
 import { createReadableDate } from '../../utils';
 
@@ -32,8 +34,11 @@ const Article: NextPage<{
     tags: string[]
     heroUrl: string
     tldr: string
-  }
-}> = ({ article, publishingDetails }) => {
+  },
+  name: string
+}> = ({ name, article, publishingDetails }) => {
+  const router = useRouter()
+
   return (
     <Page>
       <article className="article">
@@ -246,6 +251,11 @@ const Article: NextPage<{
           {compile(article).tree}
         </div>
       </article>
+      <Disqus.DiscussionEmbed shortname="christianalfoni" config={{
+        url: router.pathname,
+        identifier: name,
+        title: publishingDetails.title
+      }} />
     </Page>
   )
 }
@@ -258,6 +268,7 @@ Article.getInitialProps = async ({ query }) => {
   return {
     article: article.default,
     publishingDetails,
+    name: query.name as string
   }
 }
 
