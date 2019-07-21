@@ -7,6 +7,7 @@ import Page from '../../components/Page';
 import { useRouter } from 'next/router'
 import publisher from '../../publisher.json'
 import { createReadableDate } from '../../utils';
+import Head from 'next/head';
 
 const Notice: React.FunctionComponent = ({ children }) => {
   return (
@@ -41,6 +42,16 @@ const Article: NextPage<{
 
   return (
     <Page>
+      <Head>
+        <title>christianalfoni - {publishingDetails.title}</title>
+        <meta name="description" content={publishingDetails.tldr}></meta>
+        <meta name="twitter:card" content="summary"></meta>
+        <meta name="og:title" property="og:title" content={publishingDetails.title}></meta>
+        <meta name="og:type" property="og:type" content="website"></meta>
+        <meta name="og:url" property="og:url" content={`https://christianalfoni.com${router.pathname}`} />
+        <meta name="og:description" property="og:description" content={publishingDetails.tldr}></meta>
+        <meta name="og:image" property="og:image" content={publishingDetails.heroUrl}></meta>
+      </Head>
       <article className="article">
         <style jsx global>{`
           .article h1, .article h2, .article h3, .article h4 {

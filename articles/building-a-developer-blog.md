@@ -142,6 +142,8 @@ Article.getInitialProps = async ({ query }) => {
 export default Article;
 ```
 
+Using a JSON file to handle this does not scale very well, but it is good enough. It is not a publishing platform, it is just a blog :-)
+
 ## RSS Feed
 
 For people interested in your content it is nice to provide an RSS api. You can very easily build this api endpoint using the new **api routes**. All we have to do is create a file named `pages/api/rss.ts`, install the [feed](https://www.npmjs.com/package/feed) package and insert something like the following code:

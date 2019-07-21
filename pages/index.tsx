@@ -1,4 +1,5 @@
 import { NextPage } from 'next';
+import Head from 'next/head'
 import Page from '../components/Page';
 import publisher from '../publisher.json'
 import Link from 'next/link';
@@ -69,6 +70,16 @@ const Index: NextPage<{
 }> = ({ lastArticle, lastKofi }) => {
   return (
     <Page>
+      <Head>
+        <title>christianalfoni - developer blog</title>
+        <meta name="description" content="The developer blog of Christian Alfoni. Freelancing, Javascript, Typescript, state management and more"></meta>
+        <meta name="twitter:card" content="summary"></meta>
+        <meta name="og:title" property="og:title" content="christianalfoni - developer blog"></meta>
+        <meta name="og:type" property="og:type" content="website"></meta>
+        <meta name="og:url" property="og:url" content="https://christianalfoni.com"></meta>
+        <meta name="og:description" property="og:description" content="The developer blog of Christian Alfoni. Freelancing, Javascript, Typescript, state management and more"></meta>
+        <meta name="og:image" property="og:image" content="https://christianalfoni.com/static/logo.jpg"></meta>
+      </Head>
       <style jsx>{`
         .cards {
           display: flex;
@@ -187,7 +198,7 @@ const Index: NextPage<{
         <div className="other-column">
           <h4>presentations</h4>
           <ul>
-            <li><a href="https://www.youtube.com/watch?v=uni-dG6-Rq8" target="_blank"><small>Oslo JS Meetup 2019:</small> <br />UI as an implementation detail</a></li>
+            <li><a href="https://www.youtube.com/watch?v=EzJT0ICufas" target="_blank"><small>Oslo JS Meetup 2019:</small> <br />UI as an implementation detail</a></li>
             <li><a href="https://www.youtube.com/watch?v=uni-dG6-Rq8" target="_blank"><small>React Finland 2018:</small> <br />Declarative state and side effects</a></li>
             <li><a href="https://www.youtube.com/watch?v=MnFV6wEqKFE" target="_blank"><small>ReactiveConf 2015:</small> <br/> State, UI and the stuff in between</a></li>
           </ul>
