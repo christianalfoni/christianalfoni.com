@@ -239,7 +239,7 @@ Now, I am no designer. To get anything to look pretty okay I need to look at exi
 - **Choose two font families** from Google. Search the web for good combinations. There are several articles rating font combinations.
 - **Line length** of text should be no longer than **700**px. This is just a fact. People loose track of which line they are on if any longer than that.
 - **Line height** gives breathing space and it should be between **1.4** and **1.8**. That is just how it is.
-- **General spacing** with margins and paddings needs to be consistent. Use [rems]() to ensure this. I only use **0.5**rem, **1**rem, **1.5**rem etc. 
+- **General spacing** with margins and paddings needs to be consistent. Use [rems](https://www.sitepoint.com/understanding-and-using-rem-units-in-css/) to ensure this. I only use **0.5**rem, **1**rem, **1.5**rem etc. 
 - **Keep articles interesting** by not having too big paragraphs. Make sure you split up in multiple paragraphs, separate with new headers and code examples. 
 
 ## Summary
