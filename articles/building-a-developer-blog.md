@@ -1,4 +1,4 @@
-[Next JS version 9]() was just released. With me going 100% freelance it opened up a great opportunity to do another iteration on my blog. My previous iteration was really about server side rendering, deploying on [Heroku]() and creating a markdown converter called [marksy](), which also powers this site. 
+[Next JS version 9](https://nextjs.org/) was just released. With me going 100% freelance it opened up a great opportunity to do another iteration on my blog. My previous iteration was really about server side rendering, deploying on [Heroku](https://heroku.com) and creating a markdown converter called [marksy](https://www.npmjs.com/package/marksy), which also powers this site. 
 
 With version 9 of **Next JS** I got the stuff I want. Things like **dynamic routing**, **Typescript support**, **API routes** and other general improvements. I was super excited to see how little work it required to get my blog up and running.
 

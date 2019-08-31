@@ -17,13 +17,32 @@ const Notice: React.FunctionComponent = ({ children }) => {
   )
 }
 
+const Sandbox = ({ id, module }) => (
+  <iframe
+    src={`https://codesandbox.io/embed/${id}?fontsize=14&view=editor${
+      module ? '&module=' + encodeURIComponent(module) : ''
+    }`}
+    title={id}
+    allow="geolocation; microphone; camera; midi; vr; accelerometer; gyroscope; payment; ambient-light-sensor; encrypted-media"
+    style={{
+      width: '100%',
+      height: '500px',
+      border: 0,
+      borderRadius: '4px',
+      overflow: 'hidden',
+    }}
+    sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"
+  />
+)
+
 const compile = marksy({
   createElement,
   highlight(language, code) { 
     return Prism.highlight(code, Prism.languages.javascript, language);
   },
   components: {
-    Notice
+    Notice,
+    Sandbox
   }
 })
 
@@ -37,7 +56,7 @@ const Article: NextPage<{
     tldr: string
   },
   name: string
-}> = ({ name, article, publishingDetails }) => {
+}> = ({ name, article, publishingDetails = {title: 'temp', tldr: '', tags: ['temp'], published: '01.01.2019', heroUrl: 'https://stmedia.stimg.co/08-887062YARN101716.jpg?auto=compress&crop=faces&dpr=1&w=525&h=350&fit=fill&fill=solid&fill-color=e8e8e8'} }) => {
   const router = useRouter()
 
   return (
@@ -98,16 +117,16 @@ const Article: NextPage<{
           .article .punctuation {
             color: #FAFAFAFA;
           }
-          .article .keyword, .article .tag {
+          .article .keyword, .article .tag, .article .symbol {
             color: rgb(240, 105, 185);
           }
-          .article .string {
+          .article .string, .article .attr-value {
             color: rgb(235, 240, 130);
           }
           .article .function {
             color: rgb(75, 225, 105);
           }
-          .article .builtin, .article .boolean {
+          .article .builtin, .article .boolean, .article .number {
             color: rgb(130, 210, 230);
           }
           .article .comment {
@@ -263,7 +282,7 @@ const Article: NextPage<{
         </div>
       </article>
       <Disqus.DiscussionEmbed shortname="christianalfoni" config={{
-        url: `https://christianalfoni.com${router.pathname}`,
+        url: `https://christianalfoni.com${router.asPath}`,
         identifier: name,
         title: publishingDetails.title
       }} />
