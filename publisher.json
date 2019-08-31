@@ -10,6 +10,11 @@
   },
   "videos": {
     "ko-fi": [{
+      "title": "Ko-Fi Update 19: Hangover, Codesandbox and Flutter",
+      "youtubeId": "KAJ6xRUSByg",
+      "published": "31.08.2019",
+      "duration": "09:14"
+      }, {
       "title": "Ko-Fi Update 18: Codesandbox and hating on twitter",
       "youtubeId": "gSVhnEDuB3M",
       "published": "12.08.2019",
@@ -96,6 +101,11 @@
       "duration": "07:11"
     }],
     "presentations": [{
+      "title": "Codesandbox - State management presentation 2019",
+      "youtubeId": "9uNgNM6btoc",
+      "published": "12.08.2019",
+      "duration": "34:31"
+    }, {
       "title": "Oslo JS meetup 2019: UI as an implementation detail",
       "youtubeId": "EzJT0ICufas",
       "published": "21.07.2019",
