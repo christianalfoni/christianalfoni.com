@@ -213,6 +213,7 @@ const Article: NextPage<{
           .tags {
             display: flex;
             justify-content: center;
+            flex-wrap: wrap;
             align-items: center;
             margin: 1rem;
           }
@@ -220,7 +221,7 @@ const Article: NextPage<{
             border-radius: 3px;
             background-color: #ED2939;
             padding: 0.25rem 0.5rem;
-            margin: 0 1rem;
+            margin: 0.5rem 1rem;
             color: #FAFAFA;
             font-size: 12px;
             text-transform: uppercase;
@@ -250,7 +251,23 @@ const Article: NextPage<{
             .article h1 {
               font-size: 32px;
               width: auto;
+            }     
+             .tldr {
+              font-size: 22px; 
+              color: #555;
+              margin: 2rem;
+  
             }
+            .tldr::first-letter {
+              color: #333;
+              float: left;
+              font-size: 68px;
+              line-height: 40px;
+              padding-top: 10px;
+              padding-right: 8px;
+              padding-left: 3px;
+            }
+
           }
         `}</style>
         <div className="hero">
