@@ -70,7 +70,7 @@ We can argue all day about "how the world works" and how to better express inten
 
 ## Taking another step
 
-Immer with over 2 million downloads a week certainly proves that we have become comfortable with expressing something impure to get a pure result. Let us now take it a step further. Redux is all about splitting **"Request change"** by dispatching actions to reducers which handles **"How to change"**. Although it promises some guarantess it is all very ceremonial. Just like Immer helps us better express our intention in reducers it can also eliminate the need for them completely. And with no reducer there is no need for action creators and dispatching.
+Immer with over 2 million downloads a week certainly proves that we have become comfortable with expressing something impure to get a pure result. Let us now take it a step further. Redux is all about splitting **"Request change"** by dispatching actions to reducers which handles **"How to change"**. Although it promises some guarantees it is all very ceremonial. Just like Immer helps us better express our intention in reducers it can also eliminate the need for them completely. And with no reducer there is no need for action creators and dispatching.
 
 Let us look at the products example using **Immer** again and this time include all the parts:
 
@@ -400,7 +400,7 @@ function MyComponent() {
 }
 ```
 
-Now we see the boilerplate emerging. Because the object returned from the **useSelector** callback is new every time, we need to pass a second argument to let it know how to figure out when the state has actually changed. Also we have a duplicate destructuring, it is not ideal.
+Now we see the boilerplate emerging. Because the object returned from the **useSelector** callback is new every time, we need to pass a second argument to let it know how to figure out when the state has actually changed. Also we have duplicate destructuring, it is not ideal.
 
 Since Immer tells us exactly what state has changed we can track what state components are looking at and match this data. We create a proxy which wraps the current state of the app and tracks whatever the component access. This allows us to express the selectors as:
 
