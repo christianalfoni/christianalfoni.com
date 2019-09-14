@@ -765,9 +765,9 @@ And now we are able to optimize heavy computations at any level using an immutab
 
 I hope you found this article interesting. If you want to play around with the experiment you can check out the following two sandboxes: 
 
-### Simple Async Stuff
+### Complex Async Stuff
 Here we see how immer-store handles async actions.
-[https://codesandbox.io/s/immer-store-async-c8syd](https://codesandbox.io/s/immer-store-async-c8syd)
+[https://codesandbox.io/s/immer-store-complex-async-ktb6m](https://codesandbox.io/s/immer-store-complex-async-ktb6m)
 
 ### TodoMVC
 Here we see how immer-store handles computed state in an actual application, also using targeted state for optimal rendering of "completed" toggle. I spent an awful amount of time on the typing for immer-store, so here you see the fruits of that labor. Also look at the console to see what happens under the hood.
