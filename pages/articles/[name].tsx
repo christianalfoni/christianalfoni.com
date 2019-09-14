@@ -117,7 +117,7 @@ const Article: NextPage<{
           .article .punctuation {
             color: #FAFAFAFA;
           }
-          .article .keyword, .article .tag, .article .symbol {
+          .article .keyword, .article .tag, .article .symbol, .article .operator {
             color: rgb(240, 105, 185);
           }
           .article .string, .article .attr-value {

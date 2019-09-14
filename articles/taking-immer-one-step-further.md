@@ -1,8 +1,10 @@
-[Redux](https://redux.js.org/) had a huge impact on the React ecosystem as it was trying to find its common ground on how to manage application state (global state). It followed the functional purity principles of React itself and despite its ceremonial syntax it was adopted broadly. As time passed other tools, with different approaches started popping up. [Mobx](https://mobx.js.org/) is the most noticeable, which basically takes the same principles as [Vue](https://vuejs.org/), but in a more agnostic way. The funny thing is that when Mobx started hitting mainstream in the React community [Vuex](https://vuex.vuejs.org/) came out of the Vue team. Vuex basically tries to implement Redux into Vue. 
+[Redux](https://redux.js.org/) had a huge impact on the React ecosystem as it was trying to find its common ground on how to manage application state (global state). It followed the functional purity principles of React itself and despite its ceremonial syntax it was adopted broadly. As time passed other tools with different approaches started popping up. [Mobx](https://mobx.js.org/) is the most noticeable. It basically takes the same concept of observable values as [Vue](https://vuejs.org/), but in a more agnostic way. The funny thing is that when Mobx started hitting mainstream in the React community [Vuex](https://vuex.vuejs.org/) came out of the Vue team. Vuex basically tries to implement Redux into Vue. 
 
 So here we are. Mobx being adopted for its impurity in an immutable world, and Redux being adopted for its purity in a mutable world. This seems very strange and I think [this presentation from Rich Harris](https://docs.google.com/presentation/d/1PUvpXMBEDS45rd0wHu6tF3j_8wmGC6cOLtOw2hzU-mw/edit) certainly touches on some of the reasons.
 
-Personally **I do not really care** about immutable or mutable, I only care about the developer experience. I would never use a pure API that makes my code "perfect", but constantly blocks my progress because I have to overthink or boilerplate simple things. It just breaks my flow. On the other hand I would never use an API that is "super easy" and later I hit a wall. Like many other things a middleground can often be a good solution. In this article we are going to continue on the work by [Michele Westrate](https://twitter.com/mweststrate) and his [Immer](https://github.com/immerjs/immer) library to see where such a middleground could take us.
+Personally **I do not really care** about immutable or mutable, I only care about the developer experience. I would never use a pure API that makes my code technically perfect, but constantly blocks my progress because I have to overthink or boilerplate simple things. On the other hand I would never use an impure API that seems super simple, but later I get into problems. It is about what gets the job done and me feeling productive.
+
+Like many other things a middleground can often be a good solution. In this article we are going to continue on the work by [Michele Westrate](https://twitter.com/mweststrate) and his [Immer](https://github.com/immerjs/immer) library to see where such a middleground could take us.
 
 ## So what is Immer?
 
@@ -14,10 +16,10 @@ const productsById = (state, action) => {
     case RECEIVE_PRODUCTS:
       return {
         ...state,
-        ...action.products.reduce((obj, product) => {
-          obj[product.id] = product
-          return obj
-        }, {})
+        ...action.products.reduce((obj, product) => ({
+          ...obj,
+          [product.id]: product
+        }), {})
     }
     default:
       return state
@@ -42,9 +44,9 @@ const productsById = produce((draft, action) => {
 
 We are not returning a new value anymore, we are mutating a **draft**. Immer tracks the mutations we perform on the draft and then transforms them into immutable operations on the source state. The funny thing is that the  result of this approach is even more pure than the initial example. Let me explain.
 
-Even though the initial example produces a new value from a reducer using a combination of filters, reducers and spread operators, the returned result itself is **not** immutable. If you were to pass any of the returned state  to a third party library it could freely mutate it and cause havoc to your app. With Immer you will get an error if such a thing would occur.
+Even though the initial example produces a new value from a reducer using a combination of filters, reducers and spread operators, the returned result itself is **not** immutable. If you were to pass any of the returned state  to a third party library it could freely mutate it and cause havoc to your app. Even a simple **sort** on an array in one of your components changes the array inside the state store. With Immer you will get an error if such a thing would occur.
 
-You can of course argue how to best express an intention. Many developer thinks this:
+You can of course argue how to best express an intention. Many developers relates better to an imperative impure approach:
 
 ```ts
 action.products.forEach(product => {
@@ -52,25 +54,25 @@ action.products.forEach(product => {
 })
 ```
 
-better expresses updating a map of products than:
+Where this pure functional approach makes a lot more sense to others:
 
 ```ts
 {
   ...state,
-  ...action.products.reduce((obj, product) => {
-    obj[product.id] = product
-    return obj
-  }, {})
+  ...action.products.reduce((obj, product) => ({
+    ...obj,
+    [product.id]: product
+  }), {})
 }
 ```
 
-At the end of the day it is subjective. What we can say objectively though is that JavaScript does not have an immutable API. Until it does, performing immutable operations will require some degree of boilerplate.
+We can argue all day about "how the world works" and how to better express intention in code. At the end of the day we build applications in an impure imperative environment called **the browser** and **JavaScript**. Shoving pure principles on top of something inherently impure has consquences. Most noticeably boilerplating and complex APIs.
 
 ## Taking another step
 
-Immer with over 2 million downloads a week certainly proves that we have become comfortable with expressing something impure to get a pure result. Let us now take it a step further. Redux is all about splitting **"Request change"** by dispatching actions to reducers which handles **"How to change"**. Although it promises some guarantess it is all very ceremonial. Dispatching, action creators and reducers. Just like Immer helps us better express our intention doing a state change it can also eliminate the need for these ceremonial concepts alltogether and still keep our guarantees.
+Immer with over 2 million downloads a week certainly proves that we have become comfortable with expressing something impure to get a pure result. Let us now take it a step further. Redux is all about splitting **"Request change"** by dispatching actions to reducers which handles **"How to change"**. Although it promises some guarantess it is all very ceremonial. Just like Immer helps us better express our intention in reducers it can also eliminate the need for it completely. And with no reducer there is no need to action creators or dispatching.
 
-Let us look at the products example again more completely:
+Let us look at the products example using **Immer** again and this time include all the parts:
 
 ```ts
 // action creator
@@ -80,7 +82,7 @@ const receiveProducts = (products) => ({
 })
 
 // thunk
-const getProducts = () => async (dispatch) => {
+const getProducts = () => async (dispatch, getState, api) => {
   dispatch(receiveProducts(await api.getProducts()))
 }
 
@@ -99,8 +101,8 @@ const productsById = produce((draft, action) => {
 What if we could just express this as:
 
 ```ts
-const getProducts = (state, payload) => {
-  const products = await api.getProducts()
+const getProducts = ({ state, effects }) => {
+  const products = await effects.api.getProducts()
   
   products.forEach(product => {
     state.products[product.id] = product
@@ -108,41 +110,51 @@ const getProducts = (state, payload) => {
 }
 ```
 
-This has nothing to do with less lines of code. This is about expressing intention. We want to express the flow of asking for products, getting them and inserting them into our state. But what about our guarantees?
+This has nothing to do with less lines of code. This is about expressing intention. We want to express the flow of asking for products, getting them and inserting them into our state. We can do that with three different concepts using a **dispatcher**, an **action creator** and a **reducer**. Or we can use one concept, an **action**. But what about our guarantees?
 
 **Let us summarize what we want:**
 
-1. We want to ensure where state changes can happen
-2. We want to be able to track where a state change happened
-3. We are comfortable with using an impure approach to better express intention, but have to ensure a pure result
+1. *"We want to ensure where state changes can happen"*. They can only happen in an action
+2. *"We want to be able to track where a state change happened"*. Redux does not track thunks, but immer-store tracks actions. That means you know what actions causes what state changes
+3. *"We are comfortable with using an impure approach to better express intention, but have to ensure a pure result"*. With Immer the state changes are actually changes to a draft which results in an immutable result
 
 Moving on from here we are going to look at a **proof of concept** that shows how this API and keeping the guarantees is possible. I will write about how it works and why it works that way. At the end I hope to at least have made a point and maybe even give a fresh perspective on the tools you use.
 
 ## Immer-store
 
-The project is just called **immer-store** and it is built as an exercise to explore this fascinating mix of mutable APIs for immutable result.
+The experiment is called **immer-store** and it is built as an exercise to explore this fascinating mix of mutable APIs for an immutable result.
 
-Let us first look at the traditional count example to see how the API looks:
+Let us stay with our products to see how the API works, also including our side effect of grabbing the products themselves:
 
 ```ts
 import { createStore } from 'immer-store'
 
 const store = createStore({
   state: {
-    count: 0
+    products: {}
   },
   actions: {
-    increaseCount: (state) => {
-      state.count++
-    },
-    decreaseCount: (state) => {
-      state.count--
+    getProducts: async ({ state, effects }) => {
+      const products = await effects.api.getProducts()
+  
+      products.forEach(product => {
+        state.products[product.id] = product
+      })  
+    }
+  },
+  effects: {
+    api: {
+      getProducts: async () => {
+        const result = await fetch('/api/products')
+
+        return result.toJSON()
+      }
     }
   }
 })
 ```
 
-This store is just like the redux store. It has state, you can subscribe to it and you can dispatch requests for changes. But instead of having to create action creators and dispatch to a reducer you just call the actions.
+This store is just like the redux store. It has state, you can subscribe to it and you can dispatch requests for changes. But instead of having to create action creators and dispatch to a reducer you just call an **action**.
 
 Inside of **immer-store** we have this piece of code:
 
@@ -244,11 +256,11 @@ const wrappedAction = (payload) => {
 In short what we did here:
 
 1. We wrap the defined action from the developer
-2. We keep a reference to an Immer draft that might update during asynchronous execution
-3. We create a Proxy which manages creating new drafts for us
-4. We finalize the draft when the action is done running or whenever the state object has been accessed asynchronously during execution
+2. We create an Immer draft that will be provided to the action. This draft might be updated several times through async execution inside the action
+3. We create a Proxy which wraps the draft. This allows us to intercept access to the draft so that we can make sure we always have a new draft available for the next async change
+4. We finalize the draft immediately when the action is done executing. If it returns a promise (async await), we wait for that promise to resolve to stop creating any new drafts
 
-This is pretty much it. In addition we are able to produce quite a bit of debugging data. First of all we know what action has been triggered and Immer tells us what paths in our state is changing. That means we can show the developer exactly what logic is triggered and what state changes it makes.
+This is pretty much it. In addition we are able to produce quite a bit of debugging data. First of all we know what action has been triggered and Immer tells us what paths in our state is changing. That means we can show the developer exactly what action is triggered and what state changes it makes.
 
 But we can improve more code here.
 
@@ -276,9 +288,9 @@ function MyComponent() {
 }
 ```
 
-Now we see the boilerplate start emerging. Because the object returned from the **useSelector** callback is new every time, we need to pass a second argument to let it know how to figure out when the state has actually changed. Also we see a double destructure of the same state, it is just bloated.
+Now we see the boilerplate emerging. Because the object returned from the **useSelector** callback is new every time, we need to pass a second argument to let it know how to figure out when the state has actually changed. Also we see a duplicate destructuring, it is not ideal.
 
-Since we know exactly what state changes, due to Immer, we can actually track what state components are looking at as well. Now, this is part of Immer, but we can create our own **trackStateAccessProxy**. That means we can safely do:
+Since Immer tells us exactly what state changes we can track what state components are looking at and match this data. We create a proxy which wraps the current state of the app and track whatever the component accesses. This allows us to express the selectors as:
 
 ```tsx
 function MyComponent() {
@@ -286,7 +298,7 @@ function MyComponent() {
 }
 ```
 
-Whatever the component access will cause it to render if changed. So how does this work?
+Whatever the component access will cause it to render if changed. But how is this actually implemented? Let us have a look at the code
 
 ```ts
 // We lazyily recursively pass in what "state" to track. We also
@@ -344,7 +356,9 @@ export function createTrackStateAccessProxy(
 }
 ```
 
-This might seem crazy magical to you, but it really is not. We are just intercepting any pointer into our state and updating a set of paths that the component accesses. So let us see how our hook uses this proxy:
+This might seem crazy magical to you, but it really is not. We are just intercepting any pointer into our state and updating a set of paths that the component accesses. The complicated bits is related to that Immer also creates proxies and configures properties to avoid mutation. This makes it impossible to just proxy the exact state, we have to proxy via a fake object that we can manipulate. If you think this is crazy, look into any framework. Everybody has some code where you want to take a shower after just looking at it.
+
+Let us just forget this part and rather look at how this proxy is used:
 
 ```ts
 // We create a tracker that holds our SET of paths and
@@ -449,99 +463,132 @@ export function createStateHook<C extends Config<any, any, any>>() {
 There is certainly more going on here than in a [pure immutable approach](https://github.com/reduxjs/react-redux/blob/5.x/src/connect/selectorFactory.js), and you naturally start worrying about performance. It is increadibly difficult to compare performance of a tracking approach and a value comparison approach. Let us look at where the overhead and benefit is:
 
 ### Overhead
-- **tracking**: The overhead is in exposing and accessing the state
-- **value comparison**: The overhead is that every single component accessing state has to figure out if it should update on every state change
+- **tracking overhead**: The overhead is in warpping and accessing the state through a proxy
+- **value comparison overhead**: The overhead is that every single component accessing state has to figure out if it should update on every state change
 
 ### Benefit
-- **tracking**: When a state change occurs the path of the change is matched with a list of subscribers (components) on that path
-- **value comparison**: Almost no overhead exposing state to components
+- **tracking benefit**: When a state change occurs an exact match can be made to a component. That means if `products[0].price` changes, only components actually looking at the price will update
+- **value comparison benefit**: Almost no overhead exposing state to components
 
-The results of any performance test here would vary depending on the application. But in reality it does not matter. What matters is the developer experience and how you handle edge cases where performance actually does matter.
+The results of any performance test here would vary depending on the application. But in reality it does not matter. What matters is the developer experience. I am not saying that there are edge cases where you might need to think really hard about how state is exposed and how it affects rendering, but in my opinion you should not constantly be exposed to these low level implementation details.
 
-## Handling performance scenarios
+So let us talk about real performance concerns.
 
-The most typical example of where performance becomes a concern is with lists, especially lists where each item in that list can possible change some property on itself. Ideally you only want to reconcile that single item in the list, not even touching the component responsible for the list itself.
+## Handling performance
+
+The most typical example of where performance becomes a concern is with lists, especially lists where each item in that list can individually change some property. Think a list of stocks where the value of a single stock changes. Ideally you only want to reconcile that single stock in the list, not even touching the component responsible for the list itself.
 
 Let us see how this plays out:
 
 ```tsx
-const ListItem = ({ item }) => {
+const Stock = ({ stock }) => {
   return (
     <li>
-      {item.title}
-      {item.isAwesome}
+      {stock.name}
+      {stock.value}
     </li>
   )
 }
 
-const MyList = () => {
-  const list = useSelector(state => state.list)
+const StocksList = () => {
+  const stocks = useSelector(state => state.stocks)
 
   return (
     <ul>
-      list.map((item) => (
-        <ListItem key={item.id} item={item} />
-      ))
-    </ul>
-  )
-}
-```
-
-In this case we are passing the item itself. To avoid having to reconcile every item in the list on any change to any item we must first use **React.memo**:
-
-
-```tsx
-const ListItem = React.memo(({ item }) => {
-  return (
-    <li>
-      {item.title}
-      {item.isAwesome}
-    </li>
-  )
-})
-
-const MyList = () => {
-  const items = useSelector(state => state.items)
-
-  return (
-    <ul>
-      {Object.values(items).map((item) => (
-        <ListItem key={item.id} item={item} />
+      {Object.values(stocks).map((stock) => (
+        <Stock key={stock.id} stock={stock} />
       ))}
     </ul>
   )
 }
 ```
 
-This is what you do with lists no matter. It just ensures that if the item has not changed, reconciling the **ListItem** component is avoided. But the **MyList** component will still have to reconcile on any change to any item and there is really no way to avoid this with a traditional approach. What we can do with **immer-store** though is to target nested state.
+In this case we are passing the stock itself to a child component. The concern here is that any change to a stock forces React to reconcile the **StocksList** component and every **Stock** component as well. To avoid this we can use **React.memo**:
+
 
 ```tsx
-const ListItem = React.memo(({ id }) => {
-  const item = useAppState(state => state.items[id])
+const Stock = React.memo(({ stock }) => {
+  return (
+    <li>
+      {stock.name}
+      {stock.value}
+    </li>
+  )
+})
+```
+
+This is what you do with components in lists. The **StocksList** component will still reconcile on any change to a stock, but we avoid reconciling all the other **Stock** components except the one that changed of course.
+
+What we can do with **immer-store** though is to target nested state.
+
+```tsx
+const Stock = React.memo(({ id }) => {
+  const stock = useAppState(state => state.stocks[id])
 
   return (
     <li>
-      {item.title}
-      {item.isAwesome}
+      {stock.name}
+      {stock.value}
     </li>
   )
 })
 
-const MyList = () => {
+const StocksList = () => {
   const state = useAppState()
 
   return (
     <ul>
-      {Object.keys(state.items).map((itemId, index) => (
-        <ListItem key={item.id} id={itemId} />
+      {Object.keys(state.stocks).map((stockId, index) => (
+        <Stock key={stockId} id={stockId} />
       ))}
     </ul>
   )
 }
 ```
 
-In this example we are not passing in the **item** itself, we rather pass in the id of the item. This allows the **ListItem** component to track the item itself. That means if we were to for example change the **isAwesome** state of an item only a single **ListItem** component would render again. There would not be any need fo rthe **MyList** to reconcile as it is not specifically looking at this state, it only cares about adding/removing keys from the **items** state.
+In this example we are not passing in the stock itself, we rather pass in the id of the stock. This allows the **StocksList** component to track the stock itself. That means if any stock changes its value only the component looking at that specific value will reconcile. The list is not touched as it does not look at the value of any stocks. It will only reconcile if a stock is added or removed.
+
+Maybe you are thinking that you can do the same with Redux, but you can`t. The reason is that the **StocksList** component, and all other components, will be notified when a stock changes. Due to immutability also the dictionary of stock changes when a single stock change. Since our **StocksList** component is looking for changes to the stocks it will reconcile.
+
+Again, this is not a typicaly scenario, but it is a scenario where you actually should care about performance and tracking has benefits in those scenarios. Please comment below if you have other scenarios or scenarios where this statement is not true.
 
 ## Computing state
 
+There is this other concept we also have to find a place for and that is computing state, or memoizing derived state. A very popular project in the Redux community, [reselect](https://github.com/reduxjs/reselect), does this by comparing arguments and figuring out if they have changed.
+
+There are several benefits to this approach:
+
+1. We have immutable data, so we can use it
+2. You can easily compose them together
+3. They can be used globally in your app or each component can use them
+
+Other libraries like [Mobx](https://mobx.js.org/) and [Overmind JS](https://overmindjs.org) also computes state and they do it by automatically tracking what state is being used in the computation. These are simpler APIs as their effectiveness is not affected by what state you as a developer expose. They are always optimal due to tracking. 
+
+For the sake of this experiement where we introduced tracking to optimally render components and simplify the API, I decided to rather go with **reselect** to compute state. See if we can merge the two concepts.
+
+The tricky thing though is that we want to use computed state in both actions and components, but the state exposed are different. In actions the state can be mutated, because the state exposed is a draft. We certainly do not want mutations to occur in a computed. In the components we are tracking state, though a computed might return a cached value, so the tracking would not work.
+
+First let us solve the action. If you remember from before the state we pass into actions is wrapped in a proxy we control. That means we can use it to extract the immutable current state when passed into computeds. It does require us to create our own **createComputed** function as a wrapper around **createSelector**. This is how it works:
+
+And now we need to solve components. Since we have our own computed API we can also expose our own hook, **useComputed**. This hook does not track paths and subscribes to those paths, rather it does what Redux hooks does. It subscribes to all changes and verifies with the update if the computed has changed:
+
+And now we are able to optimize heavy computations at any level using an immutable approach.
+
+## Summary
+
+I hope you found this article interesting. If you want to play around with the experiment you can check out the following two sandboxes: 
+
+### Simple Async Stuff
+Here we see how immer-store handles async actions.
+[https://codesandbox.io/s/immer-store-async-c8syd](https://codesandbox.io/s/immer-store-async-c8syd)
+
+### TodoMVC
+Here we see how immer-store handles computed state in an actual application, also using targeted state for optimal rendering of "completed" toggle. I spent an awful amount of time on the typing for immer-store, so here you see the fruits of that labor. Also look at the console to see what happens under the hood.
+[https://codesandbox.io/s/immer-store-todomvc-ixyvx](https://codesandbox.io/s/immer-store-todomvc-ixyvx)
+
+As a conclusion I think this approach has merit, but it depends on how you think about application development. If you do not want use Immer because it feels impure, well, then you would certainly not want to take it a step further. If you do use Immer you have probably asked yourself why you spend so much time and effort boilerplating. This project does allow you to think even less about that.
+
+Personally I am completely happy with controlled mutability, like [Overmind JS](https://overmindjs.org) and [Mobx](https://mobx.js.org/). I do not NEED immutability, it is not a feature, it *allows* certain features and guarantees out of the box. For example time travel and inabilty to wrongly mutate. I have yet to work on a project where lack of immutability has prevented me from implementing the features I need, get control of mutations and using excellent devtools to get insight into my application.
+
+If you depend on immutability, but want to improve the developer experience please fork this project and make something out of it :) I am unable to take on any new projects, but love to help out if you have any questions or want input. No matter, glad you get to the end here and hope it was useful in some sense :-)
 
