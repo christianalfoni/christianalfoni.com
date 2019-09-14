@@ -54,7 +54,7 @@ action.products.forEach(product => {
 })
 ```
 
-Whether this pure functional approach makes a lot more sense to others:
+This pure functional approach makes a lot more sense to others:
 
 ```ts
 {
@@ -66,7 +66,7 @@ Whether this pure functional approach makes a lot more sense to others:
 }
 ```
 
-We can argue all day about "how the world works" and how to better express intention in code. At the end of the day we build applications in an impure imperative environment called **the browser** and **JavaScript**. Shoving pure principles on top of something inherently impure has consquences. Most noticeably boilerplating and complex APIs.
+We can argue all day about "how the world works" and how to better express intention in code. At the end of the day we build applications in an impure imperative environment called **the browser** and **JavaScript**. Shoving pure principles on top of something inherently impure has consequences. Most noticeably boilerplating and complex APIs.
 
 ## Taking another step
 
