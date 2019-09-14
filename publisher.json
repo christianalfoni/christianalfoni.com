@@ -6,6 +6,13 @@
       "published": "19.07.2019",
       "tags": ["typescript", "next", "marksy"],
       "heroUrl": "https://www.elegantthemes.com/blog/wp-content/uploads/2019/04/000-Comment-Your-Code.png"
+    },
+    "taking-immer-one-step-further": {
+      "title": "Taking Immer one step further",
+      "tldr": "Immer has proven that many developers are not happy about boilerplating intentions in their code. But there is more boilerplating Immer can help us with. Join me on an experiment to see what modern JavaScript allows us to do!",
+      "published": "14.09.2019",
+      "tags": ["typescript", "immer", "redux", "react"],
+      "heroUrl": "https://www.changingcourse.com/wp-content/uploads/2018/11/freedom-chains.jpg"
     }
   },
   "videos": {
