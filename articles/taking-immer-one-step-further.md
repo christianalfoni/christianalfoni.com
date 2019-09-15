@@ -46,7 +46,7 @@ We are not returning a new value anymore, we are mutating a **draft**. Immer tra
 
 Even though the initial example produces a new value from a reducer using a combination of filters, reducers and spread operators, the returned result itself is **not** immutable. If you were to pass any of the returned state  to a third party library it could freely mutate it and cause havoc to your app. Even a simple **sort** on an array in one of your components changes the array inside the state store. With Immer you will get an error if such a thing would occur.
 
-You can of course argue how to best express an intention. Many developers relate better to an imperative impure approach:
+You can of course argue how to best express an intention. Some developers relate better to an imperative impure approach:
 
 ```ts
 action.products.forEach(product => {
@@ -369,7 +369,7 @@ In short what we did here:
 
 1. We wrap the defined action from the developer
 2. We have a global reference to an Immer draft that is accessible by the action. This draft might be updated several times through async execution inside the action and other actions
-3. We create a Proxy which wraps proxies to the current global draft. This allows us to intercept access to the draft so that we can make sure we always have a new draft available for the next async change
+3. We create a Proxy which wraps the current global draft. This allows us to intercept access to the draft so that we can make sure we always have a new draft available for the next async change
 4. We finalize the draft as soon as the action is done executing. If it returns a promise (async/await), we wait for that promise to resolve to stop creating any new drafts
 
 This is pretty much it. In addition we are able to produce quite a bit of debugging data. First of all we know what action has been triggered and with the proxy we know exactly what kind of mutations you are performing to the draft.
@@ -775,7 +775,7 @@ Here we see how immer-store handles computed state in an actual application, als
 
 **As a conclusion I think this approach has merit**, but it depends on how you think about application development. If you do not want to use Immer because it feels impure, well, then you would certainly not want to take it a step further. If you do use Immer you have probably asked yourself why you spend so much time and effort boilerplating. This project does allow you to think even less about that.
 
-Personally I am completely happy with controlled mutability, like [Overmind JS](https://overmindjs.org) and [Mobx](https://mobx.js.org/). I do not NEED immutability, it is not a feature, it *allows* certain features and guarantees out of the box. For example time travel and inability to wrongly mutate. I have yet to work on a project where lack of immutability has prevented me from implementing the features I need, getting control of mutations and using excellent devtools to get insight into my application.
+Personally I am completely happy with controlled mutability, like [Overmind JS](https://overmindjs.org) and [Mobx](https://mobx.js.org/). I do not NEED immutability, it is not a feature, it just *allows* certain features and guarantees out of the box. For example time travel and inability to wrongly mutate. I have yet to work on a project where lack of immutability has prevented me from implementing the features I need, getting control of mutations and using excellent devtools to get insight into my application.
 
 If you depend on immutability, but want to improve the developer experience please fork this project and make something out of it :) I am unable to take on any new projects, but I'd love to help out if you have any questions or want input. Either way, I'm glad you get to the end here and hope it was useful in some sense :-)
 
