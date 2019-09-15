@@ -414,18 +414,23 @@ Whatever the component access will cause it to render if changed. But how is thi
 
 ```ts
 // This proxy manages tracking what components are looking at
-function createPathTracker(state, paths: Set<string>, path: string[] = []) {
-  // We can not proxy the state itself because that is already a proxy that will be
-  // revoked, also causing this proxy to be revoked. Also the state protects itself
-  // with "configurable: false" which creates an invarient
+function createPathTracker(
+  state,
+  tracker: { paths: Set<string>; cache?: WeakMap<object, object> },
+  path: string[] = []
+) {
+  // We can not proxy the state itself because that is already a proxy
+  // that will be revoked, also causing this proxy to be revoked. Also
+  // the state protects itself with "configurable: false" which
+  // creates an invarient
   const proxyObject = {}
   const proxy = new Proxy(proxyObject, {
-    // When a property descriptor is asked for we make our proxy object look
-    // like the state target, preventing any invariant issues
+    // When a property descriptor is asked for we make our proxy object
+    // look like the state target, preventing any invariant issues
     getOwnPropertyDescriptor(_, prop) {
-      // We only track the current path in the proxy and we have access to root state,
-      // by reducing the path we quickly get to the property asked for. This is used
-      // throughout this proxy
+      // We only track the current path in the proxy and we have access
+      // to root state, by reducing the path we quickly get to the
+      // property asked for. This is used throughout this proxy
       const target = getTarget(path, state)
 
       Object.defineProperty(
@@ -452,17 +457,36 @@ function createPathTracker(state, paths: Set<string>, path: string[] = []) {
       }
 
       const newPath = path.concat(prop as string)
-      paths.add(newPath.join('.'))
+      tracker.paths.add(newPath.join('.'))
 
-      // If we are calling a function, for example "map" we bind that to a new
-      // pathTracker so that we keep proxying the iteration
+      // If we are calling a function, for example "map" we bind
+      // that to a new pathTracker so that we keep proxying the
+      // iteration
       if (typeof target[prop] === 'function') {
-        return target[prop].bind(createPathTracker(state, paths, path))
+        return target[prop].bind(createPathTracker(state, tracker, path))
       }
 
-      // If we have an array, object or function we create a proxy around it
+      // If we have an array, object or function we create a proxy
+      // around it
       if (typeof target[prop] === 'object' && target[prop] !== null) {
-        return createPathTracker(state, paths, newPath)
+        // We first check if this object already has a proxy, so
+        // that we ensure the equality is kept. If not, we create
+        // a new proxy and add it if we have a cache. We do not
+        // use a cache on targeted state, as that only triggers
+        // when the targeted state actually changes
+        const cached = tracker.cache && tracker.cache.get(target[prop])
+
+        if (cached) {
+          return cached
+        }
+
+        const proxy = createPathTracker(state, tracker, newPath)
+
+        if (tracker.cache) {
+          tracker.cache.set(target[prop], proxy)
+        }
+
+        return proxy
       }
 
       // Any plain value we return as normal
@@ -505,8 +529,8 @@ export function createStateHook<C extends Config<any, any, any>>() {
 
     // It might not be there, where we throw an error at the end
     if (instance) {
-      // Since we deal with immutable values we can use a plain
-      // "useState" from React to handle updates from the store
+      // Since we deal with immutable values we can use a plain "useState"
+      // from React to handle updates from the store
       const [state, updateState] = React.useState(instance.state)
 
       // Since our subscription ends async (useEffect) we have to
@@ -521,33 +545,39 @@ export function createStateHook<C extends Config<any, any, any>>() {
         []
       )
 
-      // If we are targeting state (nested tracking) that would
-      // be a callback as first argument to our "useState" hook
+      // We create a track which holds the current paths and also a
+      // proxy cache. This cache ensures that same objects has the
+      // same proxies, which is important for comparison in React
+      const tracker = React.useRef({
+        paths: new Set<string>(),
+        cache: new WeakMap<object, object>(),
+      })
+
+      // We always clear out the paths before rendering, so that
+      // we can collect new paths
+      tracker.current.paths.clear()
+
+      // If we are targeting state (nested tracking) that would be
+      // a callback as first argument to our "useState" hook
       const targetState = arguments[0]
 
-      // We prepare a SET to collect the paths accessed, which
-      // we will subscribe to
-      const paths = new Set<string>()
-
-      // By default we expose the whole state, though if a
-      // callback is received this targetPath will be replaced
-      // with whatever path we tracked to expose a nested state
-      // value
+      // By default we expose the whole state, though if a callback
+      // is received this targetPath will be replaced with whatever
+      // path we tracked to expose a nested state value
       let targetPath: string[] = []
 
       // If we have a callback to nested state
       if (targetState) {
-        // We create a new SET which will be populated with
-        // whatever state we point to in the callback
+        // We create a new SET which will be populated with whatever
+        // state we point to in the callback
         const targetPaths = new Set<string>()
 
         // By creating a pathTracker we can populate this SET
-        targetState(createPathTracker(state, targetPaths))
+        targetState(createPathTracker(state, { paths: targetPaths }))
 
-        // We only want the last path, as the is the complete
-        // path to the value we return
-        // ex. useState(state => state.items[0]), we track
-        // "items", "items.0". We only want "items.0"
+        // We only want the last path, as the is the complete path
+        // to the value we return ex. useState(state => state.items[0]),
+        // we track "items", "items.0". We only want "items.0"
         const lastTrackedPath = Array.from(targetPaths).pop()
 
         // Then we update our targetPath
@@ -555,31 +585,32 @@ export function createStateHook<C extends Config<any, any, any>>() {
       }
 
       React.useEffect(() => {
-        // We subscribe to the accessed paths which causes
-        // a new render, which again creates a new subscription
+        // We subscribe to the accessed paths which causes a new render,
+        // which again creates a new subscription
         return instance.subscribe(
           (update) => {
             log(
               LogType.COMPONENT_RENDER,
-              `"${name}", tracking "${Array.from(paths).join(', ')}"`
+              `"${name}", tracking "${Array.from(tracker.current.paths).join(
+                ', '
+              )}"`
             )
 
-            // We only update the state if it is actually
-            // mounted
+            // We only update the state if it is actually mounted
             if (mountedRef.current) {
               updateState(update)
             }
           },
-          paths,
+          tracker.current.paths,
           name
         )
       })
 
-      // Lastly we return a pathTracker around the actual
-      // state we expose to the component
+      // Lastly we return a pathTracker around the actual state
+      // we expose to the component
       return targetPath.length
-        ? createPathTracker(state, paths, targetPath)
-        : createPathTracker(state, paths)
+        ? createPathTracker(state, tracker.current, targetPath)
+        : createPathTracker(state, tracker.current)
     }
 
     throwMissingStoreError()
@@ -761,6 +792,61 @@ export function createComputedHook<C extends Config<any, any, any>>() {
 
 And now we are able to optimize heavy computations at any level using an immutable approach.
 
+## Caveats
+
+React encourages immutability so that it can take advantage of **value comparison**. When we perform tracking in components we wrap all objects in a proxy. We have to make sure that the proxy reference stays the same for the underlying objects or the value comparison breaks in the component. This is taken care of by **immer-store** within a component, though some scenarios is considered caveats.
+
+- When you extract a state object in two different components and compare them, by for example from a parent to a child, they will not be equal:
+
+```tsx
+function MyChildComponent({ object }) {
+  const state = useAppState()
+
+  state.object === object // This becomes false
+}
+
+function MyComponent() {
+  const state = useAppState()
+
+  return <MyChildComponent object={state.object} />
+}
+```
+
+**Note!** React.memo works as normal
+
+- If you are to memoize a react hook, you have to memoize the exact values:
+
+```ts
+function MyComponent() {
+  const state = useAppState()
+
+  React.useEffect(() => {
+    // This will not work, you would have to memoize
+    // "state.foo"
+    return someSideEffect(state.foo)
+  }, [state])
+
+  return <div />
+}
+```
+
+- Targeted state is a not a concept to expose specific state, but to **track** specific state:
+
+```ts
+function MyComponent({ id }) {
+  // You alway point to a single value in the state
+  const entity = useAppState((state) => state.entities[id])
+
+  // If you just wanted to expose it and still track changes to "entities"
+  // as well
+  const entity2 = useAppState().entities[id]
+
+  return <div />
+}
+```
+
+Most solutions has some sort of caveats or at least confusing results using an API. Personally I do not consider these caveats a dealbreaker, but you might feel differently. If you do, please comment below.
+
 ## Summary
 
 I hope you found this article interesting. If you want to play around with the experiment you can check out the following two sandboxes: 
@@ -777,7 +863,7 @@ Here we see how immer-store handles computed state in an actual application, als
 
 Personally I am completely happy with controlled mutability, like [Overmind JS](https://overmindjs.org) and [Mobx](https://mobx.js.org/). I do not NEED immutability, it is not a feature, it just *allows* certain features and guarantees out of the box. For example time travel and inability to wrongly mutate. I have yet to work on a project where lack of immutability has prevented me from implementing the features I need, getting control of mutations and using excellent devtools to get insight into my application.
 
-If you depend on immutability, but want to improve the developer experience please fork this project and make something out of it :) I am unable to take on any new projects, but I'd love to help out if you have any questions or want input. Either way, I'm glad you get to the end here and hope it was useful in some sense :-)
+If you depend on immutability, but want to improve the developer experience please fork this project and make something out of it. I am unable to take on any new projects, but I'd love to help out if you have any questions or want input. Either way, I'm glad you get to the end here and hope it was useful in some sense :-)
 
 Big shoutout to the people at [Frontity](https://frontity.org) for complex async challenges and motivating me to take the project beyond a "half working thing"... it actually seems to be a valid library already!
 

@@ -192,7 +192,7 @@ const Index: NextPage<{
             <li><a href="https://www.npmjs.com/package/create-ssl-certificate" target="_blank">create-ssl-certificate</a></li>
             <li><a href="https://www.npmjs.com/package/process-control" target="_blank">process-control</a></li>
             <li><a href="https://www.npmjs.com/package/babel-preset-enhanced-react-style" target="_blank">babel-preset-enhanced-react-style</a></li>
-            <li><a href="https://www.npmjs.com/settings/christianalfoni/packages?page=0&perPage=2000" target="_blank">all packages...</a></li>
+            <li><a href="https://www.npmjs.com/~christianalfoni" target="_blank">all packages...</a></li>
           </ul>
         </div>
         <div className="other-column">
