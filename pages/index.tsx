@@ -159,7 +159,7 @@ const Index: NextPage<{
           />
           <Card
             heroUrl="/static/logo.jpg"
-            title={lastKofi.title}
+            title={lastKofi.title.length > 60 ? lastKofi.title.substr(0, 60) + '...' : lastKofi.title}
             description="Ko-fi is a weekly video where I talk about what I have been up to. The content ranges from freelancing, to new tools and ranting about stuff."
             url={`https://www.youtube.com/watch?v=${lastKofi.youtubeId}`}
           />
