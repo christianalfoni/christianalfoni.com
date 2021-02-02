@@ -74,7 +74,7 @@ When we use the term **state** we actually mean two different things. We use the
 - `{ isLoading: false, data: [], ... }` is a **not_loaded** state
 - `{ isLoading: false, data: [...], ... }` is a **loaded** state, where the dots represent one or multiple todos
 
-But when we express our state only through state values and not through explicit states we create problems.
+But when we express our state only through state values and not explicit states we create problems.
 
 1. It is possible to express `{ isLoading: true, error: "some error" }` and whoever consumes these values has to decide which state it really represents
 
@@ -82,7 +82,7 @@ But when we express our state only through state values and not through explicit
 
 3. If we were to represent no todos as `{ data: null }` we would get into a different problem. You would always have to check if the value is `null` before consuming it
 
-4. We are not guarding our action dispatches. In this example that means you would be able to set an error even after you have loaded the todos. It also means you would be able to add todos while it is loading, maybe resulting in your added todos would be removed when the fetching resolves, as it replaces the data value
+4. We are not guarding our action dispatches. In this example that means you would be able to set an error even after you have loaded the todos. It also means you would be able to add todos while it is loading, maybe resulting in your added todos being removed when the fetching resolves, as it replaces the data value
 
 My point here is that the reducer never represents any of its states, it just has a bunch of values we call state.
 
@@ -114,7 +114,7 @@ The way we can talk about our reducer now is that it has four states. `ERROR`, `
 
 ## Implementing the context
 
-There is not much we have to change to implement this.
+There is not much we have to change:
 
 ```ts
 export const todos = (context = { state: "NOT_LOADED" }, action) => {
@@ -169,13 +169,13 @@ if (todos.state === "ERROR") {
 
 By default reducers allows an action to be handled no matter what the actual state of the reducer is. This can get us into problems in a variaty of ways. A specific example of this, which is not unlikely, is added todos suddenly disappearing.
 
-Imagine you are implementing this, fetching todos from a server. Since you are working in your local environment the todos are instantly fetched, meaning you never have a chance to add a todo before the fetching is resolved. Everything is working and you ship it to production.
+Imagine you are implementing this reducer and fetching todos from a server. Since you are working in your local environment the todos are instantly fetched, meaning you never have a chance to add a todo before the fetching is resolved. Everything is working and you ship it to production.
 
 Now somebody with a bad internet connection is opening the app and the fetching of the initial todos takes a long time. The user is able to add a todo in the meantime. As soon as the fetching of todos is resolved, the list of todos is replaced and the user sees their added todo disappear. This type of bug is very common and it is often difficult to spot.
 
-Now, you could say that you would just disable the input for adding a new todo while it is loading. And yeah, that would indeed work. But now you have split your application logic between a reducer and an HTML attribute. That is fragile. Especially in larger teams where the person implementing the reducer might not be the same person implementing the UI. You could of course also just `concat` the fetched todos with the existing array. But bare with me here, this is just an example to show how mistakes are made. And if I did not point this out, would you have caught the bug reading the code? :-)
+Now, you could say that you would just disable the input for adding a new todo while it is loading. And yeah, that would indeed work. But now you have split your application logic between a reducer and an HTML attribute. That is fragile. Especially in larger teams where the person implementing the reducer might not be the same person implementing the UI. You could of course also just `concat` the fetched todos with the existing array. But bare with me here, this is just an example to show how mistakes are made.
 
-Moving on... Guarding a transition basically means, "at certain states, only certain actions can be handled". Let us first see how this can be expressed:
+Moving on... Guarding a transition basically means, "at certain states, only certain actions will be handled". Let us first see how this can be expressed:
 
 ```ts
 export const todos = (context = { state: "NOT_LOADED" }, action) =>
@@ -237,8 +237,8 @@ const transition = <
   transitions: {
     [State in Context["state"]]: {
       [Type in Action["type"]]?: <R extends Context>(
-        action: Action extends { type: Type } ? Action : never,
-        state: Context extends { state: State } ? Context : never
+        context: Context extends { state: State } ? Context : never,
+        action: Action extends { type: Type } ? Action : never
       ) => Context extends { state: NewState } ? Context : never;
     };
   }
@@ -297,7 +297,7 @@ const TodosContainer = () => {
 
 2. Related to the point above one of the requests might fail. That means you would have a list of todos, but also an error. That would be very confusing to the user, depending on how the UI is implemented
 
-Again, these are exactly the kinds of bugs that are hard to spot and that happens in production due to developers having performant environments and users treating your app like Mr/Ms Potato Head. Luckily for us we have a guard in place for both these scenarios. Let us look at the logic again thinking explicit states:
+Again, these are exactly the kinds of bugs that are hard to spot and it happens typically due to developers having performant environments and users treating your app like Mr/Ms Potato Head. Luckily for us we have a guard in place for both these scenarios. Let us look at the logic again thinking explicit states:
 
 ```ts
 // The todos is already being fetched, the reducer is in LOADING state
@@ -308,7 +308,7 @@ const fetchTodos = () => (dispatch, getState) => {
     type: "FETCH_TODOS",
   });
 
-  // We will still do the second fetch, as this out of
+  // We will still do the second fetch, as this is out of
   // control of the reducer
   const response = await axios.get("/todos");
 
@@ -728,10 +728,8 @@ export const todos = (context = { state: "IDLE" }, action) =>
 
 ## Conclusion
 
-The point of this article is more than anything to make you aware of why and how applications have bugs. The combination of near synchronous behaviour of asynchronous code in our development environment and our users doing everything but "the happy path", is in my experience the main reason for bugs in our apps.
+The point of this article is to, more than anything, make you aware of where bugs can occur. The combination of near synchronous behaviour of asynchronous code in our development environment and our users rarely follows our intended path, is in my experience the main reason for bugs in our apps.
 
-The concept of explicit states and transitions helps us to a large degree to avoid this. In addition it improves the typing experience of our applications by creating a typed context for each state. In addition the user is no longer in charge of driving the effects of our application, putting functions with logic directly on the points of interaction. Instead only a dispatch is allowed and our guarded reducer produces an explicit state, which our effects can react to. `dispatch -> explicit state -> effect -> dispatch`.
+The concept of explicit states and transitions helps us to a large degree avoid this. In addition it improves the typing experience of our applications by creating a typed context for each state. In addition the user is no longer in charge of driving the effects of our application, putting functions with logic directly on the points of interaction. Instead only a dispatch is allowed and our guarded reducer produces an explicit state, which our effects can react to. `dispatch -> explicit state -> effect -> dispatch`.
 
-If you never use this concept I hope it has given you some insight and reflection on how safe your code really is :-)
-
-If you want to look at the running code, take a look at the [following sandbox](https://codesandbox.io/s/runtime-dust-41zxq?file=/src/features/Auth.tsx). It also contains another way to take advantage of these explicit states, rendering dynamic content!
+If you never use this concept I hope it has given you some insight and reflection :-) If you want to look at the running code, take a look at the [following sandbox](https://codesandbox.io/s/runtime-dust-41zxq?file=/src/features/Auth.tsx). It also contains another way to take advantage of these explicit states, rendering dynamic content!
