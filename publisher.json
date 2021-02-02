@@ -1,5 +1,12 @@
 {
   "articles": {
+    "transition-your-reducer": {
+      "title": "Transition your reducer",
+      "tldr": "Even though we wrap our state in reducers, we still treat this state as just a bunch of values. In this article we will give structure and a relationship between these values and see what that enables us to do.",
+      "published": "01.01.2021",
+      "tags": ["typescript", "redux", "state", "react"],
+      "heroUrl": "https://community-cdn-digitalocean-com.global.ssl.fastly.net/variants/gbM2MfLujKBL6hhhdbEzu8v8/035575f2985fe451d86e717d73691e533a1a00545d7230900ed786341dc3c882"
+    },
     "building-a-developer-blog": {
       "title": "Building a developer blog with Next JS",
       "tldr": "I have been waiting for an opportunity to combine looking into new technology and building a new blog. Next JS version 9 was this opportunity. Let me tell you about it!",
@@ -16,133 +23,56 @@
     }
   },
   "videos": {
-    "ko-fi": [{
-      "title": "Ko-Fi Update 21: Artistic asshole, experiments and state machines",
-      "youtubeId": "vdTfCL5IMMY",
-      "published": "27.09.2019",
-      "duration": "13:30"
-      }, {
-      "title": "Ko-Fi Update 20: Bruised ribs, flipping to Overmind and state experiments",
-      "youtubeId": "vcPWKf3FqR8",
-      "published": "16.09.2019",
-      "duration": "09:32"
-      }, {
-      "title": "Ko-Fi Update 19: Hangover, Codesandbox and Flutter",
-      "youtubeId": "KAJ6xRUSByg",
-      "published": "31.08.2019",
-      "duration": "09:14"
-      }, {
-      "title": "Ko-Fi Update 18: Codesandbox and hating on twitter",
-      "youtubeId": "gSVhnEDuB3M",
-      "published": "12.08.2019",
-      "duration": "09:14"
-      }, {
-      "title": "Ko-Fi Update 17: Brain training, Next JS and a new format",
-      "youtubeId": "y-i0ZdJ505E",
-      "published": "02.08.2019",
-      "duration": "17:41"
-    }, {
-      "title": "Ko-Fi update 16: 100% freelance, Overmind release and Codesandbox",
-      "youtubeId": "ddOGP4XWKYM",
-      "published": "05.07.2019",
-      "duration": "15:16"
-    }, {
-      "title": "Ko-Fi Update 15: State management for the win",
-      "youtubeId": "ASBZ5J4_6YI",
-      "published": "07.06.2019",
-      "duration": "17:21"
-    }, {
-      "title": "Ko-Fi Update 14: Overmind presentation, fixing styling and a menu trick",
-      "youtubeId": "pWRqvkAX4-o",
-      "published": "06.05.2019",
-      "duration": "23:50"
-    }, {
-      "title": "Ko-Fi Update 13: Building a flutter app, observable state and vision of Overmind",
-      "youtubeId": "rjTzVwRaCe8",
-      "published": "25.04.2019",
-      "duration": "20:34"
-    }, {
-      "title": "Ko-Fi Update 12: Google flutter and state management",
-      "youtubeId": "A7gK-VT5YsA",
-      "published": "05.04.2019",
-      "duration": "27:40"
-    }, {
-      "title": "Ko-Fi Update 11: Cost of open source, sleeping and new website",
-      "youtubeId": "wniXb2Dide4",
-      "published": "01.04.2019",
-      "duration": "13:51"
-    }, {
-      "title": "Ko-Fi Update 10: Preview Overmind devtools, ranting about scrolling and gaming",
-      "youtubeId": "lqkANPNkUTc",
-      "published": "22.03.2019",
-      "duration": "15:43"
-    }, {
-      "title": "Ko-Fi Update 9: Getting drunk, svgs and taxes",
-      "youtubeId": "UzfUoZuIP_0",
-      "published": "15.03.2019",
-      "duration": "11:25"
-    }, {
-      "title": "Ko-Fi Update 8: I hate twitter, youtube recommendations and nextjs",
-      "youtubeId": "jktzgBOfYzY",
-      "published": "04.03.2019",
-      "duration": "11:13"
-    }, {
-      "title": "KO-FI UPDATE 7: Overmind, state machines and choosing customers",
-      "youtubeId": "WJK7_Gq6MbQ",
-      "published": "22.02.2019",
-      "duration": "11:37"
-    }, {
-      "title": "Ko-Fi Update 6: React optimizations and Overmind release",
-      "youtubeId": "sbRbHmeTiv4",
-      "published": "15.02.2019",
-      "duration": "10:15"
-    }, {
-      "title": "Ko-Fi Update 5: Exploratory APIs, Angular and Overmind",
-      "youtubeId": "nUhEyIL9EWw",
-      "published": "11.02.2019",
-      "duration": "11:23"
-    }, {
-      "title": "Ko-fi update 3: Overmind announced and Codesandbox",
-      "youtubeId": "3Y5ywOfvEiY",
-      "published": "01.02.2019",
-      "duration": "10:15"
-    }, {
-      "title": "Ko-fi update 2: excited for announcement",
-      "youtubeId": "aootSuZedBQ",
-      "published": "28.01.2019",
-      "duration": "05:03"
-    }, {
-      "title": "Ko-Fi update 1 - Committing to updates",
-      "youtubeId": "8z2YU2h8t8E",
-      "published": "18.01.2019",
-      "duration": "07:11"
-    }],
+    "concepts": {
+      "title": "CodeSandbox state machines with experimental tool",
+      "youtubeId": "2f-jEz1zoPM",
+      "published": "19.01.2021",
+      "duration": "17:31",
+      "description": "At CodeSandbox we deal with a lot of complexity and we are exploring how to best deal with this"
+    },
     "presentations": [{
+      "title": "React Finland - The story of Stitches",
+      "youtubeId": "S_N6At_5BJM",
+      "published": "01.09.2020",
+      "duration": "36:02",
+      "description": "Stitches is a CSS-in-JS solution that evolved over several iterations. This is the story"
+    }, {
       "title": "Codesandbox - State management presentation 2019",
       "youtubeId": "9uNgNM6btoc",
       "published": "12.08.2019",
-      "duration": "34:31"
+      "duration": "34:31",
+      "description": "Presenting to the team the current state of state management"
     }, {
       "title": "Oslo JS meetup 2019: UI as an implementation detail",
       "youtubeId": "EzJT0ICufas",
       "published": "21.07.2019",
-      "duration": "33:37"
+      "duration": "33:37",
+      "description": "Showing off Overmind JS and how to build application disregarding the UI"
     }, {
       "title": "React Finland 2018: Declarative state and side effects",
       "youtubeId": "uni-dG6-Rq8",
       "published": "27.05.2018",
-      "duration": "32:27"
+      "duration": "32:27",
+      "description": "A presentation on Cerebral JS and how it helped CodeSandbox"
     }, {
       "title": "ReactiveConf 2015: State, UI and the stuff in between",
       "youtubeId": "MnFV6wEqKFE",
       "published": "18.11.2015",
-      "duration": "25:45"
+      "duration": "25:45",
+      "description": "My first presentation ever, on Cerebral JS"
     }],
     "other": [{
+      "title": "Sid and Christian - TS-MORPH with UI Devtools",
+      "youtubeId": "NUaIXAm_qcw",
+      "published": "27.01.2021",
+      "duration": "1:04:10",
+      "description": "UI Devtool is a project by Sid which is just awesome. I help him deal with some complexities"
+    }, {
       "title": "A rant about CSS vs STYLES in components",
       "youtubeId": "H461yiVwkNI",
       "published": "01.02.2019",
-      "duration": "22:49"
+      "duration": "22:49",
+      "description": "I wish how we write styling could be abstracted to something that automatically optimizes it"
     }]
   }
 }

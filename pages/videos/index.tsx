@@ -1,30 +1,28 @@
 import { NextPage } from "next";
 import Page from "../../components/Page";
-import Link from "next/link";
-import publisher from '../../publisher.json'
+import publisher from "../../publisher.json";
 import { createReadableDate, sortByPublished } from "../../utils";
-import { Video } from "../../types";
 import { useState } from "react";
 
 const Videos: NextPage<{
-  videos: {
-    [tag: string]: Video[]
-  }
+  videos: typeof publisher.videos;
 }> = ({ videos }) => {
-  const [selectedTags, updateSelectedTags] = useState([])
+  const [selectedTags, updateSelectedTags] = useState([]);
 
   function toggleTag(tag) {
     if (selectedTags.includes(tag)) {
-      updateSelectedTags(selectedTags.filter((existingTag) => existingTag !== tag))
+      updateSelectedTags(
+        selectedTags.filter((existingTag) => existingTag !== tag)
+      );
     } else {
-      updateSelectedTags(selectedTags.concat(tag))
+      updateSelectedTags(selectedTags.concat(tag));
     }
   }
 
   const videosList = Object.keys(videos)
     .filter((tag) => !selectedTags.length || selectedTags.includes(tag))
     .reduce((aggr, tag) => aggr.concat(videos[tag]), [])
-    .sort(sortByPublished)
+    .sort(sortByPublished);
 
   return (
     <Page>
@@ -39,7 +37,7 @@ const Videos: NextPage<{
           }
           .tag {
             font-size: 12px;
-            background-color: #EAEAEA;
+            background-color: #eaeaea;
             border-radius: 3px;
             padding: 0.25rem 0.5rem;
             margin: 0 0.5rem;
@@ -47,14 +45,14 @@ const Videos: NextPage<{
             cursor: pointer;
           }
           .tag.selected {
-            background-color: #ED2939;
-            color: #FAFAFA;
+            background-color: #ed2939;
+            color: #fafafa;
           }
           .tag:hover {
-            background-color: #F0F0F0;
+            background-color: #f0f0f0;
           }
           .tag.selected:hover {
-            background-color: #ED2939;
+            background-color: #ed2939;
           }
           .list {
             list-style-type: none;
@@ -72,7 +70,7 @@ const Videos: NextPage<{
             text-decoration: none;
           }
           .item:hover {
-            background-color: #F0F0F0;
+            background-color: #f0f0f0;
           }
           .item img {
             width: 100px;
@@ -93,7 +91,7 @@ const Videos: NextPage<{
           .item-meta > div {
             margin-right: 1rem;
           }
-          @media(max-width: 700px) {
+          @media (max-width: 700px) {
             .item img {
               width: 50px;
             }
@@ -110,14 +108,28 @@ const Videos: NextPage<{
         `}</style>
         <div className="tags">
           {Object.keys(videos).map((tag) => (
-            <div key={tag} className={`tag${selectedTags.includes(tag) ? ' selected' : ''}`} onClick={() => toggleTag(tag)}>{tag}</div>
+            <div
+              key={tag}
+              className={`tag${selectedTags.includes(tag) ? " selected" : ""}`}
+              onClick={() => toggleTag(tag)}
+            >
+              {tag}
+            </div>
           ))}
         </div>
         <ul className="list">
           {videosList.map((video) => (
             <li key={video.youtubeId}>
-              <a className="item" href={`https://www.youtube.com/watch?v=${video.youtubeId}`} target="_blank">
-                <div><img src={`https://img.youtube.com/vi/${video.youtubeId}/default.jpg`} /></div>
+              <a
+                className="item"
+                href={`https://www.youtube.com/watch?v=${video.youtubeId}`}
+                target="_blank"
+              >
+                <div>
+                  <img
+                    src={`https://img.youtube.com/vi/${video.youtubeId}/default.jpg`}
+                  />
+                </div>
                 <div className="item-details">
                   <h3>{video.title}</h3>
                   <div>{video.description}</div>
@@ -126,25 +138,26 @@ const Videos: NextPage<{
                       <strong>duration:</strong> {video.duration}
                     </div>
                     <div>
-                      <strong>published:</strong> {createReadableDate(video.published)}
+                      <strong>published:</strong>{" "}
+                      {createReadableDate(video.published)}
                     </div>
                   </div>
                 </div>
-              </a> 
+              </a>
             </li>
           ))}
         </ul>
       </div>
     </Page>
-  )
-}
+  );
+};
 
-Videos.getInitialProps = async ({ query }) => {
-  const videos = publisher.videos
+Videos.getInitialProps = async () => {
+  const videos = publisher.videos;
 
   return {
-    videos
-  }
-}
+    videos,
+  };
+};
 
-export default Videos
+export default Videos;
