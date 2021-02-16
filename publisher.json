@@ -3,7 +3,7 @@
     "transition-your-reducer": {
       "title": "Transition your reducer",
       "tldr": "Even though we wrap our state in reducers, we still treat this state as just a bunch of values. In this article we will give structure and a relationship between these values and see what that enables us to do.",
-      "published": "01.01.2021",
+      "published": "04.02.2021",
       "tags": ["typescript", "redux", "state", "react"],
       "heroUrl": "https://community-cdn-digitalocean-com.global.ssl.fastly.net/variants/gbM2MfLujKBL6hhhdbEzu8v8/035575f2985fe451d86e717d73691e533a1a00545d7230900ed786341dc3c882"
     },
@@ -23,13 +23,19 @@
     }
   },
   "videos": {
-    "concepts": {
+    "concepts": [{
+      "title": "React-states explanation",
+      "youtubeId": "ul_3ABrpj64",
+      "published": "15.02.2021",
+      "duration": "34:06",
+      "description": "A simple 20 liner helper tool to write explicit states in React. I tried to make this educational without taking advantage of the tool itself."
+    }, {
       "title": "CodeSandbox state machines with experimental tool",
       "youtubeId": "2f-jEz1zoPM",
       "published": "19.01.2021",
       "duration": "17:31",
       "description": "At CodeSandbox we deal with a lot of complexity and we are exploring how to best deal with this"
-    },
+    }],
     "presentations": [{
       "title": "React Finland - The story of Stitches",
       "youtubeId": "S_N6At_5BJM",
