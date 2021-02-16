@@ -6,6 +6,12 @@ import Link from "next/link";
 import { FaRss } from "react-icons/fa";
 import { Video } from "../types";
 
+function toDate(dateString: string) {
+  const parts = dateString.split(".");
+
+  return new Date(Number(parts[2]), Number(parts[1]) - 1, Number(parts[0]));
+}
+
 const Card: React.FunctionComponent<{
   heroUrl: string;
   title: string;
@@ -334,8 +340,21 @@ const Index: NextPage<{
 
 Index.getInitialProps = async () => {
   const lastArticleName = Object.keys(publisher.articles).sort((a, b) =>
-    publisher.articles[a].published > publisher.articles[b].published ? 1 : -1
+    toDate(publisher.articles[a].published) <
+    toDate(publisher.articles[b].published)
+      ? 1
+      : -1
   )[0];
+
+  const lastVideo = Object.keys(publisher.videos).reduce(
+    (aggr, key) =>
+      publisher.videos[key].reduce((current, video) => {
+        return !current || toDate(current.published) < toDate(video.published)
+          ? video
+          : current;
+      }, aggr),
+    null
+  );
 
   return {
     lastArticle: {
@@ -344,15 +363,7 @@ Index.getInitialProps = async () => {
       name: lastArticleName,
       tldr: publisher.articles[lastArticleName].tldr,
     },
-    lastVideo: Object.keys(publisher.videos).reduce((aggr, key) => {
-      if (!aggr) {
-        return publisher.videos[key][0];
-      }
-
-      return publisher.videos[key].reduce((current, video) => {
-        return current.published < video.published ? video : current;
-      }, aggr);
-    }, null),
+    lastVideo,
     presentations: publisher.videos.presentations,
   };
 };
