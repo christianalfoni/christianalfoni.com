@@ -10,6 +10,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
+  "engines": {
+    "node": "16"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
